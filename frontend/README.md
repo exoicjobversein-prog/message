@@ -16,16 +16,27 @@ The dev server proxies `/api` and `/webhooks` to the standalone SMS service on
 
 Override with `.env` if the API lives elsewhere (see `.env.example`).
 
+## Auth
+
+- `/login` — split-screen sign-in (Adora 7X branding). Token is stored in
+  `localStorage` and sent as `Authorization: Bearer` on every request.
+- **Admin** (seeded in the backend) lands on `/tenants` — create a workspace with
+  a login email + password, hand those to the tenant.
+- **Tenant user** lands on `/templates` and only sees its own workspace
+  (Templates / Leads / Send). No tenant picker.
+- A 401 from the API clears the token and bounces to `/login`.
+
 ## Structure
 
 ```
 src/
-  api/client.ts      axios instance + typed endpoint wrappers
-  api/types.ts        Tenant / SmsTemplate / Lead / SmsMessage
-  components/         Layout (tab nav), TenantPicker
-  hooks.ts            useTenants, useSelectedTenant (sessionStorage-backed)
-  pages/              TenantsPage, TemplatesPage, LeadsPage, SendPage
-  main.tsx            router
+  api/client.ts      axios instance (bearer interceptor) + typed endpoint wrappers
+  api/types.ts        Auth / Tenant / SmsTemplate / Lead / SmsMessage
+  auth.tsx            AuthProvider + useAuth (login / logout / me hydration)
+  components/Layout   role-aware tab nav + logout
+  hooks.ts            useTenants (admin)
+  pages/              LoginPage, TenantsPage, TemplatesPage, LeadsPage, SendPage
+  main.tsx            router + RequireAuth / RoleRoute guards
 ```
 
 ## Pages
