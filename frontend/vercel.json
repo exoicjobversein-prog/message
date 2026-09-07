@@ -3,11 +3,15 @@
   "rewrites": [
     {
       "source": "/api/:path*",
-      "destination": "https://adora-sms-backend.onrender.com/api/:path*"
+      "destination": "https://message-u5oo.onrender.com/api/:path*"
     },
     {
       "source": "/webhooks/:path*",
-      "destination": "https://adora-sms-backend.onrender.com/webhooks/:path*"
+      "destination": "https://message-u5oo.onrender.com/webhooks/:path*"
+    },
+    {
+      "source": "/((?!api/|webhooks/|assets/).*)",
+      "destination": "/index.html"
     }
   ]
 }
