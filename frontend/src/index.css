@@ -56,16 +56,17 @@ a { color: var(--accent); }
 
 /* ---------- Login ---------- */
 .login {
-  min-height: 100vh;
-  display: grid;
-  grid-template-columns: 1.1fr 1fr;
+  position: fixed;
+  inset: 0;
+  display: flex;
+  overflow: auto;
 }
 @media (max-width: 820px) {
-  .login { grid-template-columns: 1fr; }
-  .login__brand { display: none; }
+  .login__brand { display: none !important; }
 }
 
 .login__brand {
+  flex: 1.05 1 0;
   background: #0b0d12;
   color: #e9eaed;
   padding: 48px 56px;
@@ -108,10 +109,12 @@ a { color: var(--accent); }
 }
 
 .login__panel {
+  flex: 0.95 1 0;
   background: #ffffff;
   color: #1c2128;
-  display: grid;
-  place-items: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   padding: 40px;
 }
 .login__form { width: 100%; max-width: 340px; }
