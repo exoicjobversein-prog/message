@@ -1,0 +1,29 @@
+# Render.com blueprint (monorepo: backend/ + frontend/).
+# Bring your own free Postgres (Neon) and set DATABASE_URL in the dashboard.
+services:
+  - type: web
+    name: adora-sms-backend
+    runtime: node
+    plan: free
+    region: singapore
+    rootDir: backend
+    buildCommand: npm install && npm run build
+    startCommand: npm start
+    healthCheckPath: /health
+    envVars:
+      - key: NODE_VERSION
+        value: "20"
+      - key: RUN_MIGRATIONS
+        value: "true"
+      - key: DATABASE_URL
+        sync: false
+      - key: PLIVO_AUTH_ID
+        sync: false
+      - key: PLIVO_AUTH_TOKEN
+        sync: false
+      - key: PLIVO_STATUS_WEBHOOK_URL
+        sync: false
+      - key: PLIVO_DEFAULT_SENDER
+        sync: false
+      - key: API_KEY
+        sync: false

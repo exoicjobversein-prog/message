@@ -1,0 +1,1 @@
+{"root":["./src/hooks.ts","./src/main.tsx","./src/vite-env.d.ts","./src/api/client.ts","./src/api/types.ts","./src/components/layout.tsx","./src/components/tenantpicker.tsx","./src/pages/leadspage.tsx","./src/pages/sendpage.tsx","./src/pages/templatespage.tsx","./src/pages/tenantspage.tsx"],"errors":true,"version":"5.9.3"}

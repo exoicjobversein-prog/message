@@ -1,0 +1,11 @@
+# secrets / env (all env files, everywhere)
+.env
+.env.*
+*.env
+**/.env
+**/.env.*
+
+# deps / build
+node_modules/
+dist/
+*.log
