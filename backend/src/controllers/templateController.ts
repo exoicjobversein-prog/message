@@ -25,10 +25,19 @@ export async function createTemplate(req: Request, res: Response): Promise<void>
   res.status(201).json({ template });
 }
 
+/** Tenant users may only touch their own tenant's templates; admins any. */
+function ownsTemplate(req: Request, template: SmsTemplate): boolean {
+  return req.user?.role === 'admin' || req.user?.tenantId === template.tenantId;
+}
+
 export async function updateTemplate(req: Request, res: Response): Promise<void> {
   const template = await SmsTemplate.findByPk(req.params.id);
   if (!template) {
     res.status(404).json({ error: 'template not found' });
+    return;
+  }
+  if (!ownsTemplate(req, template)) {
+    res.status(403).json({ error: 'forbidden' });
     return;
   }
   const { name, body } = req.body ?? {};
@@ -39,10 +48,15 @@ export async function updateTemplate(req: Request, res: Response): Promise<void>
 }
 
 export async function deleteTemplate(req: Request, res: Response): Promise<void> {
-  const count = await SmsTemplate.destroy({ where: { id: req.params.id } });
-  if (!count) {
+  const template = await SmsTemplate.findByPk(req.params.id);
+  if (!template) {
     res.status(404).json({ error: 'template not found' });
     return;
   }
+  if (!ownsTemplate(req, template)) {
+    res.status(403).json({ error: 'forbidden' });
+    return;
+  }
+  await template.destroy();
   res.status(204).end();
 }

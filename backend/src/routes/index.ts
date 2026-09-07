@@ -1,6 +1,7 @@
 import { Router } from 'express';
-import { apiKey } from '../middleware/apiKey';
 import { asyncHandler } from '../utils/asyncHandler';
+import { authRequired, adminRequired, tenantScoped } from '../middleware/auth';
+import { login, me } from '../controllers/authController';
 import {
   createTenant,
   listTenants,
@@ -17,27 +18,35 @@ import { listMessages, sendCampaign } from '../controllers/smsController';
 import { plivoStatus } from '../controllers/webhookController';
 
 export const router = Router();
-
-// --- API (optional X-Api-Key) ---
 const api = Router();
-api.use(apiKey);
 
-api.post('/tenants', asyncHandler(createTenant));
-api.get('/tenants', asyncHandler(listTenants));
-api.post('/tenants/:id/provision', asyncHandler(provisionTenant));
+// --- Auth (public) ---
+api.post('/auth/login', asyncHandler(login));
+api.get('/auth/me', authRequired, asyncHandler(me));
 
-api.get('/tenants/:id/templates', asyncHandler(listTemplates));
-api.post('/tenants/:id/templates', asyncHandler(createTemplate));
-api.put('/templates/:id', asyncHandler(updateTemplate));
-api.delete('/templates/:id', asyncHandler(deleteTemplate));
+// --- Admin: tenant + login-account management ---
+api.post('/tenants', authRequired, adminRequired, asyncHandler(createTenant));
+api.get('/tenants', authRequired, adminRequired, asyncHandler(listTenants));
+api.post(
+  '/tenants/:id/provision',
+  authRequired,
+  adminRequired,
+  asyncHandler(provisionTenant),
+);
 
-api.get('/tenants/:id/leads', asyncHandler(listLeads));
-api.post('/tenants/:id/leads', asyncHandler(createLeads));
+// --- Tenant-scoped (admin or the tenant's own user) ---
+api.get('/tenants/:id/templates', authRequired, tenantScoped, asyncHandler(listTemplates));
+api.post('/tenants/:id/templates', authRequired, tenantScoped, asyncHandler(createTemplate));
+api.put('/templates/:id', authRequired, asyncHandler(updateTemplate));
+api.delete('/templates/:id', authRequired, asyncHandler(deleteTemplate));
 
-api.post('/tenants/:id/send', asyncHandler(sendCampaign));
-api.get('/tenants/:id/messages', asyncHandler(listMessages));
+api.get('/tenants/:id/leads', authRequired, tenantScoped, asyncHandler(listLeads));
+api.post('/tenants/:id/leads', authRequired, tenantScoped, asyncHandler(createLeads));
+
+api.post('/tenants/:id/send', authRequired, tenantScoped, asyncHandler(sendCampaign));
+api.get('/tenants/:id/messages', authRequired, tenantScoped, asyncHandler(listMessages));
 
 router.use('/api', api);
 
-// --- Webhooks (no api key; form-encoded) ---
+// --- Webhooks (no auth; form-encoded from Plivo) ---
 router.post('/webhooks/plivo/status', asyncHandler(plivoStatus));

@@ -1,12 +1,11 @@
 import { useCallback, useEffect, useState } from 'react';
 import { api, errMessage } from '../api/client';
 import type { SmsTemplate } from '../api/types';
-import { useSelectedTenant, useTenants } from '../hooks';
-import TenantPicker from '../components/TenantPicker';
+import { useAuth } from '../auth';
 
 export default function TemplatesPage() {
-  const { tenants } = useTenants();
-  const [tenantId, setTenantId] = useSelectedTenant(tenants);
+  const { tenant } = useAuth();
+  const tenantId = tenant?.id ?? '';
 
   const [templates, setTemplates] = useState<SmsTemplate[]>([]);
   const [editingId, setEditingId] = useState<string | null>(null);
@@ -79,8 +78,6 @@ export default function TemplatesPage() {
       {(err || msg) && (
         <div className={`banner ${err ? 'err' : 'ok'}`}>{err ?? msg}</div>
       )}
-
-      <TenantPicker tenants={tenants} value={tenantId} onChange={setTenantId} />
 
       <div className="card">
         <h2>{editingId ? 'Edit template' : 'New template'}</h2>

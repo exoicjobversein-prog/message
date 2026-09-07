@@ -1,12 +1,11 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { api, errMessage } from '../api/client';
 import type { Lead, SmsMessage, SmsTemplate } from '../api/types';
-import { useSelectedTenant, useTenants } from '../hooks';
-import TenantPicker from '../components/TenantPicker';
+import { useAuth } from '../auth';
 
 export default function SendPage() {
-  const { tenants } = useTenants();
-  const [tenantId, setTenantId] = useSelectedTenant(tenants);
+  const { tenant } = useAuth();
+  const tenantId = tenant?.id ?? '';
 
   const [templates, setTemplates] = useState<SmsTemplate[]>([]);
   const [leads, setLeads] = useState<Lead[]>([]);
@@ -111,8 +110,6 @@ export default function SendPage() {
       {(err || msg) && (
         <div className={`banner ${err ? 'err' : 'ok'}`}>{err ?? msg}</div>
       )}
-
-      <TenantPicker tenants={tenants} value={tenantId} onChange={setTenantId} />
 
       <div className="card">
         <h2>Campaign</h2>

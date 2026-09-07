@@ -1,14 +1,13 @@
 import { useCallback, useEffect, useState } from 'react';
 import { api, errMessage } from '../api/client';
 import type { Lead } from '../api/types';
-import { useSelectedTenant, useTenants } from '../hooks';
-import TenantPicker from '../components/TenantPicker';
+import { useAuth } from '../auth';
 
 const EXTRA_FIELDS = ['city', 'type', 'link'] as const;
 
 export default function LeadsPage() {
-  const { tenants } = useTenants();
-  const [tenantId, setTenantId] = useSelectedTenant(tenants);
+  const { tenant } = useAuth();
+  const tenantId = tenant?.id ?? '';
 
   const [leads, setLeads] = useState<Lead[]>([]);
   const [form, setForm] = useState<Record<string, string>>({});
@@ -84,8 +83,6 @@ export default function LeadsPage() {
       {(err || msg) && (
         <div className={`banner ${err ? 'err' : 'ok'}`}>{err ?? msg}</div>
       )}
-
-      <TenantPicker tenants={tenants} value={tenantId} onChange={setTenantId} />
 
       <div className="card">
         <h2>Add lead</h2>

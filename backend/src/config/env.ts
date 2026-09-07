@@ -15,7 +15,14 @@ export const env = {
   PLIVO_AUTH_TOKEN: process.env.PLIVO_AUTH_TOKEN || '',
   PLIVO_STATUS_WEBHOOK_URL: process.env.PLIVO_STATUS_WEBHOOK_URL || '',
   PLIVO_DEFAULT_SENDER: process.env.PLIVO_DEFAULT_SENDER || '',
-  API_KEY: process.env.API_KEY || '',
-  // Run migrations/001_init.sql on boot (handy on free hosts with no shell).
+
+  // Auth
+  JWT_SECRET: process.env.JWT_SECRET || 'dev-only-insecure-secret-change-me',
+  JWT_EXPIRES_IN: process.env.JWT_EXPIRES_IN || '7d',
+  // Seed / ensure an admin account on boot.
+  ADMIN_EMAIL: process.env.ADMIN_EMAIL || '',
+  ADMIN_PASSWORD: process.env.ADMIN_PASSWORD || '',
+
+  // Run migrations/*.sql on boot (handy on free hosts with no shell).
   RUN_MIGRATIONS: (process.env.RUN_MIGRATIONS || 'true') !== 'false',
 };

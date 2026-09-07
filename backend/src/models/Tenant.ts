@@ -11,6 +11,7 @@ import {
 import { SmsTemplate } from './SmsTemplate';
 import { Lead } from './Lead';
 import { SmsMessage } from './SmsMessage';
+import { User } from './User';
 
 @Table({ tableName: 'tenants', underscored: true, timestamps: false })
 export class Tenant extends Model {
@@ -43,4 +44,7 @@ export class Tenant extends Model {
 
   @HasMany(() => SmsMessage)
   declare messages: SmsMessage[];
+
+  @HasMany(() => User)
+  declare users: User[];
 }

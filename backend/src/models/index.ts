@@ -3,3 +3,5 @@ export { SmsTemplate } from './SmsTemplate';
 export { Lead } from './Lead';
 export { SmsMessage } from './SmsMessage';
 export type { SmsStatus } from './SmsMessage';
+export { User } from './User';
+export type { UserRole } from './User';

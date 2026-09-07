@@ -1,9 +1,30 @@
+export type UserRole = 'admin' | 'tenant';
+
+export interface AuthUser {
+  id: string;
+  email: string;
+  role: UserRole;
+  tenantId: string | null;
+  createdAt: string;
+}
+
 export interface Tenant {
   id: string;
   name: string;
   senderId: string | null;
   plivoSubaccountAuthId?: string | null;
   createdAt: string;
+  users?: { id: string; email: string; role: UserRole }[];
+}
+
+export interface LoginResponse {
+  token: string;
+  user: AuthUser;
+}
+
+export interface MeResponse {
+  user: AuthUser;
+  tenant: Tenant | null;
 }
 
 export interface SmsTemplate {

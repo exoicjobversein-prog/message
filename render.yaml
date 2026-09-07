@@ -15,7 +15,15 @@ services:
         value: "20"
       - key: RUN_MIGRATIONS
         value: "true"
+      - key: JWT_EXPIRES_IN
+        value: "7d"
+      - key: JWT_SECRET
+        generateValue: true
       - key: DATABASE_URL
+        sync: false
+      - key: ADMIN_EMAIL
+        sync: false
+      - key: ADMIN_PASSWORD
         sync: false
       - key: PLIVO_AUTH_ID
         sync: false
@@ -24,6 +32,4 @@ services:
       - key: PLIVO_STATUS_WEBHOOK_URL
         sync: false
       - key: PLIVO_DEFAULT_SENDER
-        sync: false
-      - key: API_KEY
         sync: false

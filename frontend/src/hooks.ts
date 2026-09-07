@@ -25,31 +25,3 @@ export function useTenants() {
 
   return { tenants, error, loading, reload };
 }
-
-/** Remembers the last selected tenant id across tabs via sessionStorage. */
-export function useSelectedTenant(tenants: Tenant[]) {
-  const [id, setId] = useState<string>(() => {
-    try {
-      return sessionStorage.getItem('tenantId') ?? '';
-    } catch {
-      return '';
-    }
-  });
-
-  useEffect(() => {
-    if (tenants.length && !tenants.some((t) => t.id === id)) {
-      setId(tenants[0].id);
-    }
-  }, [tenants, id]);
-
-  const select = useCallback((next: string) => {
-    setId(next);
-    try {
-      sessionStorage.setItem('tenantId', next);
-    } catch {
-      /* ignore */
-    }
-  }, []);
-
-  return [id, select] as const;
-}
