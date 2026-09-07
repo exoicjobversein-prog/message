@@ -1,4 +1,3 @@
-import path from 'path';
 import express, { NextFunction, Request, Response } from 'express';
 import { router } from './routes';
 
@@ -7,8 +6,10 @@ export const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-app.use(express.static(path.join(__dirname, '..', 'public')));
-
+// API-only service — the UI is the separate frontend static site.
+app.get('/', (_req, res) =>
+  res.json({ service: 'adora-sms-backend', ok: true }),
+);
 app.get('/health', (_req, res) => res.json({ ok: true }));
 
 app.use(router);
